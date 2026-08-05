@@ -1,0 +1,38 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /v1/api/empresa
+spring:
+  application:
+    name: empresa-backend
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 1800000
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: ${AZURE_AD_TENANT_ID}
+        credential:
+          client-id: ${AZURE_AD_CLIENT_ID}
+          client-secret: ${AZURE_AD_CLIENT_SECRET}
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
