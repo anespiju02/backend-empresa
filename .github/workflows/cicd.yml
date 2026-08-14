@@ -42,18 +42,17 @@ jobs:
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
       - name: Configure App Service settings from GitHub secrets
-        with:
-          inlineScript: |
-            az webapp config appsettings set \
-              --name ${{ secrets.AZURE_WEBAPP_NAME }} \
-              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-              --settings \
-                DB_URL=${{ secrets.DB_URL }} \
-                DB_USER=${{ secrets.DB_USER }} \
-                DB_PASS=${{ secrets.DB_PASS }} \
-                AZURE_AD_TENANT_ID=${{ secrets.TENANT_ID }} \
-                AZURE_AD_CLIENT_ID=${{ secrets.CLIENT_ID }} \
-                AZURE_AD_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+        run: |
+          az webapp config appsettings set \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings \
+              DB_URL=${{ secrets.DB_URL }} \
+              DB_USER=${{ secrets.DB_USER }} \
+              DB_PASS=${{ secrets.DB_PASS }} \
+              AZURE_AD_TENANT_ID=${{ secrets.TENANT_ID }} \
+              AZURE_AD_CLIENT_ID=${{ secrets.CLIENT_ID }} \
+              AZURE_AD_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
