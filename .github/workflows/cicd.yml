@@ -1,4 +1,4 @@
-name: CI/CD Workflow for java Spring Boot on Azure App Services
+name: CI/CD Workflow for java Spring Boot on Azure App Service
 
 on:
   push:
