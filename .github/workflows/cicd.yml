@@ -1,0 +1,53 @@
+name: CI/CD Workflow for java Spring Boot on Azure App Service
+
+on:
+  push:
+    branches:
+    - main
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+        AZURE_CORE_OUTPUT: none
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Build JAR with Gradle
+        run: ./gradlew --no-daemon build -x test
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Configure App Service settings from GitHub secrets
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az webapp config appsettings set \
+              --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --settings \
+                DB_URL=${{ secrets.DB_URL }} \
+                DB_USER=${{ secrets.DB_USER }} \
+                DB_PASS=${{ secrets.DB_PASS }} \
+                AZURE_AD_TENANT_ID=${{ secrets.TENANT_ID }} \
+                AZURE_AD_CLIENT_ID=${{ secrets.CLIENT_ID }} \
+                AZURE_AD_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          package: build/libs/*.jar
