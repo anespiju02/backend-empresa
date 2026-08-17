@@ -53,9 +53,9 @@ jobs:
               DB_URL=${{ secrets.DB_URL }} \
               DB_USER=${{ secrets.DB_USER }} \
               DB_PASS=${{ secrets.DB_PASS }} \
-              AZURE_AD_TENANT_ID=${{ secrets.TENANT_ID }} \
-              AZURE_AD_CLIENT_ID=${{ secrets.CLIENT_ID }} \
-              AZURE_AD_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+              TENANT_ID=${{ secrets.TENANT_ID }} \
+              CLIENT_ID=${{ secrets.CLIENT_ID }} \
+              CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
