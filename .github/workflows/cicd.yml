@@ -37,6 +37,9 @@ jobs:
       - name: Validate Azure login
         run: az account show
 
+      - name: Debug AZURE_CREDENTIALS
+        run: echo "${{ secrets.AZURE_CREDENTIALS }}"
+
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
