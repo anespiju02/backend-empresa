@@ -34,12 +34,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Validate Azure login
-        run: az account show
-
-      - name: Debug AZURE_CREDENTIALS
-        run: echo "${{ secrets.AZURE_CREDENTIALS }}"
-
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -57,10 +51,17 @@ jobs:
               CLIENT_ID=${{ secrets.CLIENT_ID }} \
               CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
 
+      - name: Create deployment ZIP
+        run: |
+          mkdir deploy
+          cp build/libs/*.jar deploy/
+          cd deploy
+          zip -r ../app.zip .
+
       - name: Deploy using Azure CLI
         run: |
           az webapp deploy \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name ${{ secrets.AZURE_WEBAPP_NAME }} \
-            --src-path build/libs/*.jar \
-            --type jar
+            --src-path app.zip \
+            --type zip
