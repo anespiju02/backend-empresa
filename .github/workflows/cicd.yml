@@ -57,8 +57,10 @@ jobs:
               CLIENT_ID=${{ secrets.CLIENT_ID }} \
               CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
 
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          package: build/libs/*.jar
+      - name: Deploy using Azure CLI
+        run: |
+          az webapp deploy \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --src-path build/libs/*.jar \
+            --type jar
